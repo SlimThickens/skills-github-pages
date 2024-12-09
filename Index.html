@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spoken Jazz & the *tingg Machine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #1db954;
+        }
+        .scene {
+            margin-bottom: 20px;
+        }
+        .choices button {
+            background-color: #1db954;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .choices button:hover {
+            background-color: #1ed760;
+        }
+        .choices {
+            text-align: center;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+        /* Psychedelic effect styles */
+        .psychedelic {
+            animation: colorFlash 0.2s infinite, textJiggle 0.2s infinite;
+        }
+        @keyframes colorFlash {
+            0% { background-color: #ff0000; color: #00ff00; }
+            25% { background-color: #0000ff; color: #ffff00; }
+            50% { background-color: #00ff00; color: #ff00ff; }
+            75% { background-color: #ffff00; color: #0000ff; }
+            100% { background-color: #ff00ff; color: #00ff00; }
+        }
+        @keyframes textJiggle {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            25% { transform: translate(-1px, -2px) rotate(-1deg); }
+            50% { transform: translate(-3px, 0px) rotate(1deg); }
+            75% { transform: translate(2px, 1px) rotate(0deg); }
+            100% { transform: translate(1px, -1px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Spoken Jazz & the *tingg Machine</h1>
+    <h2>Choose Your Own Adventure</h2>
+    <div id="game">
+        <!-- Game content will be dynamically injected here -->
+    </div>
+    <footer>© 2024 Jazz Machine Adventures</footer>
+    <script>
+        const scenes = {
+            start: {
+                text: "You're at the Bebop Coffeeshop on a cool evening. The air is thick with creativity, and you spot Bub strumming his guitar, Theresa scribbling notes, and Andrew tuning his bass. The jazz choir rehearsal is about to start. What do you do?",
+                choices: [
+                    { text: "Join Bub and offer to play along", next: "joinBub" },
+                    { text: "Ask Theresa about the setlist", next: "askTheresa" },
+                    { text: "Chat with Andrew about his bass skills", next: "chatAndrew" },
+                    { text: "Step outside to clear your head", next: "stepOutside" }
+                ]
+            },
+            joinBub: {
+                text: "Bub grins as you join him. He launches into a smooth riff and asks if you're ready for open mic night at Old Town Tavern. What do you say?",
+                choices: [
+                    { text: "Yes, I’m ready to perform", next: "openMicReady" },
+                    { text: "No, I need more practice", next: "morePractice" },
+                    { text: "Ask if Bub wants to experiment with something new", next: "wildCocktail" }
+                ]
+            },
+            morePractice: {
+                text: "You decide to spend some time practicing on your own, honing your skills. You lose track of time, but eventually, you're ready. Do you...",
+                choices: [
+                    { text: "Head straight to the open mic", next: "openMicReady" },
+                    { text: "Call it a night and reflect on your progress", next: "endPractice" }
+                ]
+            },
+            openMicReady: {
+                text: "You're feeling the jitters as the open mic night begins. The crowd is buzzing with energy, and you have to decide how to handle this moment.",
+                choices: [
+                    { text: "Take the stage and give a killer solo", next: "performanceSuccess" },
+                    { text: "Join Bub for a duo performance", next: "duetOpenMic" }
+                ]
+            },
+            askTheresa: {
+                text: "Theresa looks up from her notes, smiling. 'I’m thinking we should experiment tonight. How about it?'",
+                choices: [
+                    { text: "Suggest sticking to classics", next: "classicJazz" },
+                    { text: "Encourage experimentation", next: "experimentalJazz" }
+                ]
+            },
+            chatAndrew: {
+                text: "Andrew nervously asks if you want to hear his new bassline. It’s a bit experimental but could be something special. Do you...",
+                choices: [
+                    { text: "Listen to his bassline", next: "andrewBassline" },
+                    { text: "Decline and check on Theresa", next: "askTheresa" }
+                ]
+            },
+            stepOutside: {
+                text: "You step outside for some fresh air. The sharp scent of autumn fills the air. Leaning against a faded VW bus is Steve wearing a mischievous grin. He motions for you to come over.",
+                choices: [
+                    { text: "Approach Steve cautiously", next: "steveCameo" },
+                    { text: "Ignore them and go back inside", next: "rehearsalStart" }
+                ]
+            },
+            steveCameo: {
+                text: "Steve looks you up and down. 'I hear you’re looking for a spark of inspiration,' they say, pulling out a deck of cards. 'Pick one. Let’s see if fate’s on your side tonight.'",
+                choices: [
+                    { text: "Pick the red card", next: "steveRedCard" },
+                    { text: "Pick the black card", next: "steveBlackCard" }
+                ]
+            },
+            steveRedCard: {
+                text: "Steve nods approvingly. 'Chaos, huh? This should be fun.' They hand you a strange, glowing cocktail. 'Drink it, and let’s see what happens.'",
+                choices: [
+                    { text: "Drink the cocktail", next: "psychedelicExperience" },
+                    { text: "Refuse the drink", next: "rehearsalStart" }
+                ]
+            },
+            steveBlackCard: {
+                text: "Steve smirks. 'Control. I like that. They hand you a cryptic poem.' It reads: 'In the space between notes, everything is possible.' What do you do?",
+                choices: [
+                    { text: "Try to decipher the poem", next: "poemPuzzle" },
+                    { text: "Ignore the poem and go inside", next: "rehearsalStart" }
+                ]
+            },
+            psychedelicExperience: {
+                text: "You drink the glowing cocktail, and suddenly, the world around you seems to dissolve into swirling colors. The sound of jazz warps into strange, ethereal harmonies.",
+                choices: [
+                    { text: "Embrace the experience", next: "immersiveTrip" },
+                    { text: "Try to fight it off", next: "returnReality" }
+                ],
+                effect: "psychedelic"
+            },
+            immersiveTrip: {
+                text: "You find yourself in a surreal, dreamlike version of the coffee shop. Bub’s guitar floats above him, playing itself, while Andrew’s bass creates melodies that ripple through the air. Theresa floats in the corner, writing on an invisible notepad.",
+                choices: [
+                    { text: "Join the floating instruments and jam", next: "cosmicJam" },
+                    { text: "Search for a way out of this dream", next: "findWayBack" }
+                ],
+                effect: "psychedelic"
+            },
+            cosmicJam: {
+                text: "You merge with the music, losing yourself in the cosmic rhythm. When you return to the present, you feel more inspired than ever, and the band is ready to perform.",
+                choices: [
+                    { text: "Perform with renewed energy", next: "duetOpenMic" },
+                    { text: "Take a moment to recover", next: "recoverFromTrip" }
+                ]
+            },
+            findWayBack: {
+                text: "You stumble through the psychedelic world, searching for an exit. Finally, you find a glowing door and step back into reality. Bub looks at you, impressed.",
+                choices: [
+                    { text: "Prepare for the performance", next: "performanceReady" },
+                    { text: "Ask Bub if he saw what just happened", next: "askBubAboutTrip" }
+                ]
+            },
+            recoverFromTrip: {
+                text: "The effects of the cocktail fade, but you’re left with a strange clarity. You feel more connected to the music than before. It’s time for the open mic.",
+                choices: [
+                    { text: "Perform your solo", next: "ownCompositions" },
+                    { text: "Join Bub for the duet", next: "duetOpenMic" }
+                ]
+            },
+            duetOpenMic: {
+                text: "You and Bub take the stage. The crowd loves it. Your chemistry is undeniable, and it feels like the music is playing through you.",
+                choices: [
+                    { text: "Celebrate with the group", next: "afterParty" },
+                    { text: "Reflect on what’s next", next: "futurePlans" }
+                ]
+            },
+            afterParty: {
+                text: "Bill’s house is wild, with jazz and drinks flowing. Someone starts a round of truth or dare. What do you do?",
+                choices: [
+                    { text: "Join in for fun", next: "partyTruthOrDare" },
+                    { text: "Stick to the music and jam", next: "musicJam" }
+                ]
+            },
+            futurePlans: {
+                text: "Inspired by tonight, you start thinking about the future. A regional tour? A solo album? The possibilities are endless.",
+                choices: [
+                    { text: "Plan a regional tour", next: "regionalTour" },
+                    { text: "Begin writing your first solo album", next: "soloAlbum" }
+                ]
+            },
+            regionalTour: {
+                text: "The group takes to the road, performing in venues across the region. Each show builds your bond stronger than ever.",
+                choices: [
+                    { text: "Celebrate the group’s growth", next: "endSuccess" },
+                    { text: "Plan an even bigger tour", next: "nationalTour" }
+                ]
+            },
+            soloAlbum: {
+                text: "You begin crafting your solo album, pouring your soul into every track. It’s a fulfilling and challenging journey.",
+                choices: [
+                    { text: "Release the album independently", next: "endSuccess" },
+                    { text: "Seek a record deal", next: "endBittersweet" }
+                ]
+            },
+            nationalTour: {
+                text: "The national tour is a roaring success, cementing the group’s legacy in the jazz world.",
+                choices: [
+                    { text: "Reflect on your journey", next: "endSuccess" },
+                    { text: "Plan the next big project", next: "futurePlans" }
+                ]
+            },
+            endSuccess: {
+                text: "Your journey has been one of creativity, connection, and growth. The adventure continues as you leave a mark on the jazz world.",
+                choices: [
+                    { text: "Play Again", next: "start" }
+                ]
+            },
+            endBittersweet: {
+                text: "Though your success is undeniable, you can’t shake the feeling that something is missing. Perhaps it’s time to reconnect with your roots.",
+                choices: [
+                    { text: "Play Again", next: "start" }
+                ]
+            },
+            partyTruthOrDare: {
+                text: "You join the group for a wild game of truth or dare. Each round is crazier than the last.",
+                choices: [
+                    { text: "Accept a wild dare", next: "wildDare" },
+                    { text: "Answer a revealing truth", next: "truthRevealed" }
+                ]
+            },
+            musicJam: {
+                text: "You stay focused on the music, jamming with the group. The vibe is great, and everyone plays in sync.",
+                choices: [
+                    { text: "Celebrate the jam session", next: "afterParty" },
+                    { text: "Head home to reflect", next: "end" }
+                ]
+            },
+            wildCocktail: {
+                text: "Bub looks intrigued but cautious. 'You sure about this?' he asks as he hands you a strange glowing drink, something that looks like it could either open your mind or wreck you. You take a deep breath and down it. As soon as it hits, your senses explode.",
+                choices: [
+                    { text: "Ride the high and see where it takes you", next: "psychedelicExperience" },
+                    { text: "Try to resist the effects and focus", next: "returnReality" }
+                ]
+            },
+            wildDare: {
+                text: "You take on a dare to sing in the middle of the street, which ends in an unforgettable, hilarious performance. The group laughs, and you bond even more.",
+                choices: [
+                    { text: "Head back to the jam session", next: "afterParty" },
+                    { text: "Call it a night and go home", next: "end" }
+                ]
+            },
+            truthRevealed: {
+                text: "You answer a revealing question, which causes a few raised eyebrows and some laughter. It’s awkward, but the group appreciates your honesty.",
+                choices: [
+                    { text: "Head back to the jam session", next: "afterParty" },
+                    { text: "Call it a night and go home", next: "end" }
+                ]
+            },
+            returnReality: {
+                text: "You try to fight off the effects of the cocktail, but it’s harder than you expected. The world feels distorted, and you struggle to focus. You make your way back to reality, though things are still off.",
+                choices: [
+                    { text: "Prepare for the performance", next: "performanceReady" },
+                    { text: "Ask Bub if he saw what just happened", next: "askBubAboutTrip" }
+                ]
+            },
+            askBubAboutTrip: {
+                text: "Bub laughs, saying, 'You were gone for a while there! But now’s the time to get your head back in the game.'",
+                choices: [
+                    { text: "Focus on preparing for the performance", next: "performanceReady" },
+                    { text: "Ask Bub for advice on handling moments like that", next: "performanceReady" }
+                ]
+            },
+            performanceReady: {
+                text: "You feel ready, but the nerves are still there. The crowd is getting antsy for the performance. What will you do?",
+                choices: [
+                    { text: "Take a deep breath and start your performance", next: "performanceSuccess" },
+                    { text: "Talk to Bub and get some last-minute advice", next: "performanceAdvice" }
+                ]
+            },
+            performanceAdvice: {
+                text: "Bub gives you a quick pep talk, reminding you to just feel the music and let it guide you. You’re ready now, but the question is: will you step up and own the stage?",
+                choices: [
+                    { text: "Take the stage with confidence", next: "performanceSuccess" },
+                    { text: "Back out and sit this one out", next: "performanceFailure" }
+                ]
+            },
+            performanceSuccess: {
+                text: "You step on stage and give the performance of a lifetime. The crowd loves it, and you can feel the energy in the room. Your confidence grows as you finish the set.",
+                choices: [
+                    { text: "Celebrate with the group", next: "afterParty" },
+                    { text: "Reflect on what’s next", next: "futurePlans" }
+                ]
+            },
+            performanceFailure: {
+                text: "You freeze halfway through the performance, your mind goes blank, and the crowd goes silent. You manage to finish, but the energy in the room is awkward.",
+                choices: [
+                    { text: "Leave the stage and head home", next: "end" },
+                    { text: "Talk to the group and try to redeem yourself", next: "afterParty" }
+                ]
+            },
+            endPractice: {
+                text: "You decide to call it a night, feeling good about your practice but wondering what might have been. Sometimes it’s better to step back and reflect.",
+                choices: [
+                    { text: "Play again", next: "start" }
+                ]
+            },
+            end: {
+                text: "You’ve completed your journey, but as with all great jazz, the story never truly ends. There’s always more to learn and more music to play.",
+                choices: [
+                    { text: "Play Again", next: "start" }
+                ]
+            }
+        };
+
+        function renderScene(sceneKey) {
+            const scene = scenes[sceneKey];
+            const gameElement = document.getElementById("game");
+
+            // Apply psychedelic effect if defined
+            if (scene.effect === "psychedelic") {
+                document.body.classList.add("psychedelic");
+            } else {
+                document.body.classList.remove("psychedelic");
+            }
+
+            gameElement.innerHTML = `
+                <div class="scene">
+                    <p>${scene.text}</p>
+                    <div class="choices">
+                        ${scene.choices.map(choice => `<button onclick="renderScene('${choice.next}')">${choice.text}</button>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Start the game
+        renderScene("start");
+    </script>
+</body>
+</html>
