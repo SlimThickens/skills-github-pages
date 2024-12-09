@@ -45,9 +45,7 @@
 <body>
     <h1>Spoken Jazz & the *tingg Machine</h1>
     <h2>Choose Your Own Adventure</h2>
-    <div id="game">
-        <!-- Game content will be dynamically injected here -->
-    </div>
+    <div id="game"></div>
     <footer>© 2024 Jazz Machine Adventures</footer>
     <script>
         const scenes = {
@@ -63,7 +61,7 @@
                 text: "You skip practice to sell weed. A buyer texts you, but it's a shady character. Do you meet him?",
                 choices: [
                     { text: "Meet the buyer in a parking lot", next: "shadyBuyer" },
-                    { text: "Cancel the deal and keep the stash", next: "friendCall" }
+                    { text: "Cancel the deal and keep the stash", next: "start" }
                 ]
             },
             shadyBuyer: {
@@ -76,7 +74,7 @@
             escapedCop: {
                 text: "You convince the cop that you're just a musician trying to make ends meet. He lets you off with a warning, but you're shaken.",
                 choices: [
-                    { text: "Head to the open mic", next: "travelLate" }
+                    { text: "Head to the open mic", next: "openMicLate" }
                 ]
             },
             theresa: {
@@ -198,5 +196,4 @@
 
         renderScene("start");
     </script>
-</body>
-</html>
+</body
