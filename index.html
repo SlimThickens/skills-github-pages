@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spoken Jazz & the *tingg Machine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #1db954;
+        }
+        .scene {
+            margin-bottom: 20px;
+        }
+        .choices button {
+            background-color: #1db954;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .choices button:hover {
+            background-color: #1ed760;
+        }
+        .choices {
+            text-align: center;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>Spoken Jazz & the *tingg Machine</h1>
+    <h2>Choose Your Own Adventure</h2>
+    <div id="game">
+        <!-- Game content will be dynamically injected here -->
+    </div>
+    <footer>© 2024 Jazz Machine Adventures</footer>
+    <script>
+        const scenes = {
+            start: {
+                text: "It's spring of 1999 at the Bebop Coffeeshop. Andrew invites you to jam with the jazz choir. What do you do?",
+                choices: [
+                    { text: "Accept Andrew’s invitation", next: "travel" },
+                    { text: "Skip practice to sell weed", next: "weed" },
+                    { text: "Hang out with Theresa", next: "theresa" }
+                ]
+            },
+            weed: {
+                text: "You skip practice to sell weed. A buyer texts you, but it's a shady character. Do you meet him?",
+                choices: [
+                    { text: "Meet the buyer in a parking lot", next: "shadyBuyer" },
+                    { text: "Cancel the deal and keep the stash", next: "friendCall" }
+                ]
+            },
+            shadyBuyer: {
+                text: "You meet the buyer, who turns out to be a cop. What do you do?",
+                choices: [
+                    { text: "Run for it!", next: "arrested" },
+                    { text: "Talk your way out of it", next: "escapedCop" }
+                ]
+            },
+            escapedCop: {
+                text: "You convince the cop that you're just a musician trying to make ends meet. He lets you off with a warning, but you're shaken.",
+                choices: [
+                    { text: "Head to the open mic", next: "travelLate" }
+                ]
+            },
+            theresa: {
+                text: "Theresa invites you back to her place. She offers wine and starts talking about her 'artistic vision.' Do you stay?",
+                choices: [
+                    { text: "Stay and listen", next: "theresaDrama" },
+                    { text: "Make an excuse to leave", next: "travel" }
+                ]
+            },
+            theresaDrama: {
+                text: "Theresa's artistic vision involves you modeling for a life-drawing session. You spend hours awkwardly posing and miss the open mic.",
+                choices: [
+                    { text: "Start Over", next: "start" }
+                ]
+            },
+            travel: {
+                text: "You’re traveling to the open mic in your VW bus. The engine sputters. What do you do?",
+                choices: [
+                    { text: "Pull over and check the engine", next: "fixBus" },
+                    { text: "Keep driving and hope for the best", next: "busBreakdown" },
+                    { text: "Call a friend for help", next: "friendHelp" }
+                ]
+            },
+            fixBus: {
+                text: "You manage to fix the engine with duct tape and some creative problem-solving. The bus roars to life.",
+                choices: [
+                    { text: "Head to the open mic", next: "openMic" }
+                ]
+            },
+            busBreakdown: {
+                text: "The bus breaks down completely. You're stuck on the side of the road. Do you hitchhike?",
+                choices: [
+                    { text: "Try to hitch a ride", next: "hitchhike" },
+                    { text: "Call for a tow truck", next: "missOpenMic" }
+                ]
+            },
+            hitchhike: {
+                text: "A kind stranger picks you up and takes you to the open mic. You're late but grateful.",
+                choices: [
+                    { text: "Continue to the open mic", next: "openMicLate" }
+                ]
+            },
+            friendHelp: {
+                text: "Your friend helps you fix the bus, and you make it to the open mic just in time.",
+                choices: [
+                    { text: "Head to the open mic", next: "openMic" }
+                ]
+            },
+            openMic: {
+                text: "You arrive at the Old Town Tavern. The crowd is lively. What do you do?",
+                choices: [
+                    { text: "Perform solo and dazzle the crowd", next: "jamSession" },
+                    { text: "Join a random jam band", next: "awkwardJam" },
+                    { text: "Grab a drink first", next: "fallOffStage" }
+                ]
+            },
+            openMicLate: {
+                text: "You arrive at the open mic late. The energy is lower, but you can still win the crowd. What do you do?",
+                choices: [
+                    { text: "Play your best song", next: "jamSession" },
+                    { text: "Wing it with a random tune", next: "awkwardJam" }
+                ]
+            },
+            jamSession: {
+                text: "Your performance is electric. The crowd loves you, and you’re invited to join a local jazz group.",
+                choices: [
+                    { text: "Celebrate with the band", next: "end" }
+                ]
+            },
+            awkwardJam: {
+                text: "You join a jam band without knowing the tune. It’s awkward, but the band cuts you some slack. What do you do?",
+                choices: [
+                    { text: "Recover with a killer solo", next: "jamSession" },
+                    { text: "Quietly step off stage", next: "openMicLate" }
+                ]
+            },
+            fallOffStage: {
+                text: "You drink too much and fall off the stage. The crowd laughs, but you can recover. What’s next?",
+                choices: [
+                    { text: "Play again and redeem yourself", next: "openMicLate" },
+                    { text: "Call it a night", next: "end" }
+                ]
+            },
+            end: {
+                text: "Congratulations! Whether through talent, perseverance, or sheer luck, you've completed your jazz adventure.",
+                choices: [
+                    { text: "Play Again", next: "start" }
+                ]
+            },
+            missOpenMic: {
+                text: "You miss the open mic entirely. The night feels like a waste, but tomorrow is another day.",
+                choices: [
+                    { text: "Start Over", next: "start" }
+                ]
+            },
+            arrested: {
+                text: "You're arrested and spend the night in a holding cell. Better luck next time.",
+                choices: [
+                    { text: "Start Over", next: "start" }
+                ]
+            }
+        };
+
+        const gameElement = document.getElementById("game");
+
+        function renderScene(sceneKey) {
+            const scene = scenes[sceneKey];
+            gameElement.innerHTML = `
+                <div class="scene">
+                    <p>${scene.text}</p>
+                    <div class="choices">
+                        ${scene.choices.map(choice => `
+                            <button onclick="renderScene('${choice.next}')">${choice.text}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        renderScene("start");
+    </script>
+</body>
+</html>
