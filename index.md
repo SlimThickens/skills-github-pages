@@ -1,5 +1,4 @@
 ---
-title: Spoken Jazz and the tingg** Machine
-Choose your own adventure!!
+title: Spoken Jazz and the ting** Machine Choose your own adventure!!
 ---
 
