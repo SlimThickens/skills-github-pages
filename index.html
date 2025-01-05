@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Plug</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 5px;
+      font-size: 14px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      margin: 5px 0;
+      font-size: 20px;
+      color: #008000;
+    }
+
+    h3 {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #ff0000;
+    }
+
+    p {
+      margin: 3px 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 10px;
+      font-size: 12px;
+      background-color: white;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+      text-align: center;
+      padding: 4px 2px;
+    }
+
+    th {
+      background-color: #f0f0f5;
+    }
+
+    button {
+      margin: 2px;
+      padding: 3px 6px;
+      font-size: 11px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1px;
+    }
+
+    .compact-row {
+      white-space: nowrap;
+    }
+
+    #messages {
+      color: red;
+      font-weight: bold;
+    }
+
+    .price-up {
+      color: green;
+    }
+
+    .price-down {
+      color: red;
+    }
+
+    .odd-row {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>The Plug</h1>
+  <p>Balance: $<span id="balance">1000</span>|Day: <span id="day">1</span></p>
+
+  <h3>Drugs</h3>
+  <table id="drugTable">
+    <tr>
+      <th>Drug</th>
+      <th>Price</th>
+      <th>Avg</th>
+      <th>Own</th>
+      <th>Actions</th>
+    </tr>
+  </table>
+
+  <h3>Factories</h3>
+  <table id="factoryTable">
+    <tr>
+      <th>Factory</th>
+      <th>Prod</th>
+      <th>Price</th>
+      <th>Own</th>
+      <th>Action</th>
+    </tr>
+  </table>
+
+  <h3>Weapons</h3>
+  <table id="weaponTable">
+    <tr>
+      <th>Weapon</th>
+      <th>Price</th>
+      <th>Own</th>
+      <th>Action</th>
+    </tr>
+  </table>
+
+  <h3>Leaderboard</h3>
+  <div id="leaderboard"></div>
+
+  <p id="messages"></p>
+
+  <script>
+    let balance = 1000;
+    let day = 1;
+    const VICTORY_AMOUNT = 10000000;
+    const CRIME_BOSS_THRESHOLDS = [10000, 50000, 250000, 1000000, 10000000];
+    let currentBossIndex = 0;
+    let gameWon = false;
+
+    const drugs = [
+      {name: "Weed", price: 100, owned: 0, averageCost: 0, lastPrice: 100},
+      {name: "Cocaine", price: 100, owned: 0, averageCost: 0, lastPrice: 100},
+      {name: "LSD", price: 100, owned: 0, averageCost: 0, lastPrice: 100},
+      {name: "Meth", price: 100, owned: 0, averageCost: 0, lastPrice: 100},
+    ];
+
+    const factories = [
+      {name: "Grow Room", production: 100, price: 10000, owned: 0, drug: "Weed"},
+      {name: "Coke Lab", production: 100, price: 10000, owned: 0, drug: "Cocaine"},
+      {name: "Acid Lab", production: 100, price: 10000, owned: 0, drug: "LSD"},
+      {name: "Meth Lab", production: 100, price: 10000, owned: 0, drug: "Meth"},
+    ];
+
+    const weapons = [
+      {name: "Brass Knuckles", price: 500, owned: 0},
+      {name: "Switchblade", price: 1000, owned: 0},
+      {name: "9mm", price: 2500, owned: 0},
+    ];
+
+    function checkCrimeBoss() {
+      if (!gameWon && currentBossIndex < CRIME_BOSS_THRESHOLDS.length && balance >= CRIME_BOSS_THRESHOLDS[currentBossIndex]) {
+        const message = "A crime boss approaches! ";
+        const fightButton = document.createElement("button");
+        fightButton.textContent = "Fight";
+        fightButton.onclick = () => handleCrimeBossChoice("fight");
+
+        const fleeButton = document.createElement("button");
+        fleeButton.textContent = "Flee";
+        fleeButton.onclick = () => handleCrimeBossChoice("flee");
+
+        const messageContainer = document.getElementById("messages");
+        messageContainer.innerHTML = message;
+        messageContainer.appendChild(fightButton);
+        messageContainer.appendChild(fleeButton);
+      }
+    }
+
+    function handleCrimeBossChoice(action) {
+      const messageContainer = document.getElementById("messages");
+      messageContainer.innerHTML = ""; // Clear the buttons
+
+      if (action === "fight") {
+        const playerPower = weapons.reduce((sum, w, index) => sum + w.owned * (index + 1), 1);
+        const bossPower = currentBossIndex + 2; // Boss power scales with index
+        if (Math.random() < playerPower / (10 * bossPower)) { // Increased difficulty
+          const reward = CRIME_BOSS_THRESHOLDS[currentBossIndex] * 2; // Double the threshold
+          alert(`You defeated the crime boss! You earned $${reward.toLocaleString()}.`);
+          balance += reward;
+          if (currentBossIndex === CRIME_BOSS_THRESHOLDS.length - 1) {
+            endGame();
+          }
+        } else {
+          alert("You lost to the crime boss. You lose 80% of your money.");
+          balance = Math.floor(balance * 0.2);
+        }
+      } else {
+        alert("You fled from the crime boss and lost 3 days.");
+        day += 3;
+      }
+      currentBossIndex++; // Move to the next boss
+      updateUI();
+    }
+
+    function endGame() {
+      gameWon = true;
+      clearInterval(dayInterval);
+      clearInterval(priceInterval);
+
+      // Get the player's name (you might want to use a prompt for this)
+      let playerName = prompt("Enter your name for the leaderboard:", "Player");
+
+      saveScore(playerName, day);
+      displayLeaderboard();
+      alert(`Congratulations! You have defeated the final boss and won the game in ${day} days!`);
+    }
+
+    function updateBalance(newBalance) {
+      balance = newBalance;
+      checkCrimeBoss();
+      updateUI();
+    }
+
+    function sellDrug(index, quantity) {
+      const drug = drugs[index];
+      if (drug.owned >= quantity) {
+        const newBalance = balance + (drug.price * quantity);
+        drug.owned -= quantity;
+        updateBalance(newBalance);
+      } else {
+        alert("Not enough stock.");
+      }
+    }
+
+    function sellAll(index) {
+      const drug = drugs[index];
+      const newBalance = balance + (drug.price * drug.owned);
+      drug.owned = 0;
+      drug.averageCost = 0;
+      updateBalance(newBalance);
+    }
+
+    function buyDrug(index, quantity) {
+      const drug = drugs[index];
+      const cost = drug.price * quantity;
+      if (balance >= cost) {
+        const newBalance = balance - cost;
+        drug.averageCost = (drug.averageCost * drug.owned + cost) / (drug.owned + quantity);
+        drug.owned += quantity;
+        updateBalance(newBalance);
+      } else {
+        alert("Not enough money.");
+      }
+    }
+
+    function buyFactory(index) {
+      const factory = factories[index];
+      if (balance >= factory.price) {
+        const newBalance = balance - factory.price;
+        factory.owned++;
+        updateBalance(newBalance);
+      } else {
+        alert("Not enough money.");
+      }
+    }
+
+    let dayInterval = setInterval(() => {
+      day++;
+      factories.forEach(factory => {
+        const drug = drugs.find(d => d.name === factory.drug);
+        if (drug)
+          drug.owned += factory.production * factory.owned;
+      });
+      checkCrimeBoss();
+      updateUI();
+    }, 30000);
+
+    let priceInterval = setInterval(() => {
+      drugs.forEach(drug => {
+        drug.lastPrice = drug.price;
+        const changeType = Math.random();
+        let newPrice;
+
+        if (changeType < 0.1) {
+          newPrice = drug.price * (2 + Math.random());
+        } else if (changeType < 0.2) {
+          newPrice = drug.price * (0.2 + Math.random() * 0.3);
+        } else {
+          const changePercent = (Math.random() - 0.5) * 100;
+          newPrice = drug.price * (1 + changePercent / 100);
+        }
+
+        drug.price = Math.max(25, Math.min(200, newPrice));
+      });
+      updateUI();
+    }, 5000);
+
+    function updateUI() {
+      document.getElementById("balance").innerText = balance.toLocaleString();
+      document.getElementById("day").innerText = day;
+
+      const drugTable = document.getElementById("drugTable");
+      drugTable.innerHTML = `<tr>
+                <th>Drug</th>
+                <th>Price</th>
+                <th>Avg</th>
+                <th>Own</th>
+                <th>Actions</th>
+            </tr>`;
+      drugs.forEach((drug, index) => {
+        const row = document.createElement("tr");
+        row.className = 'compact-row' + (index % 2 === 1 ? ' odd-row' : '');
+        const priceClass = drug.price > drug.lastPrice ? 'price-up' : drug.price < drug.lastPrice ? 'price-down' : '';
+        row.innerHTML = `
+                    <td>${drug.name}</td>
+                    <td class="${priceClass}">${drug.price.toFixed(0)}</td>
+                    <td>${drug.averageCost.toFixed(0)}</td>
+                    <td>${drug.owned}</td>
+                    <td class="actions">
+                        <button onclick="buyDrug(${index}, 1)">Buy 1</button>
+                        <button onclick="buyDrug(${index}, 10)">Buy 10</button>
+                        <button onclick="sellDrug(${index}, 1)">Sell 1</button>
+                        <button onclick="sellAll(${index})">Sell All</button>
+                    </td>
+                `;
+        drugTable.appendChild(row);
+      });
+
+      const factoryTable = document.getElementById("factoryTable");
+      factoryTable.innerHTML = `<tr>
+                <th>Factory</th>
+                <th>Prod</th>
+                <th>Price</th>
+                <th>Own</th>
+                <th>Action</th>
+            </tr>`;
+      factories.forEach((factory, index) => {
+        const row = document.createElement("tr");
+        row.className = 'compact-row' + (index % 2 === 1 ? ' odd-row' : '');
+        row.innerHTML = `
+                    <td>${factory.name}</td>
+                    <td>${factory.production}</td>
+                    <td>${factory.price}</td>
+                    <td>${factory.owned}</td>
+                    <td>
+                        <button onclick="buyFactory(${index})">Buy</button>
+                    </td>
+                `;
+        factoryTable.appendChild(row);
+      });
+
+      const weaponTable = document.getElementById("weaponTable");
+      weaponTable.innerHTML = `<tr>
+                <th>Weapon</th>
+                <th>Price</th>
+                <th>Own</th>
+                <th>Action</th>
+            </tr>`;
+      weapons.forEach((weapon, index) => {
+        const row = document.createElement("tr");
+        row.className = 'compact-row' + (index % 2 === 1 ? ' odd-row' : '');
+        row.innerHTML = `
+                    <td>${weapon.name}</td>
+                    <td>${weapon.price}</td>
+                    <td>${weapon.owned}</td>
+                    <td>
+                        <button onclick="buyWeapon(${index})">Buy</button>
+                    </td>
+                `;
+        weaponTable.appendChild(row);
+      });
+    }
+
+    function buyWeapon(index) {
+      const weapon = weapons[index];
+      if (balance >= weapon.price) {
+        const newBalance = balance - weapon.price;
+        weapon.owned++;
+        updateBalance(newBalance);
+      } else {
+        alert("Not enough money.");
+      }
+    }
+
+    // Function to save score using an external file
+    function saveScore(playerName, score) {
+      // Construct the data to be sent to the server
+      const data = new FormData();
+      data.append('playerName', playerName);
+      data.append('score', score);
+
+      // Send the data to the server using fetch API
+      fetch('save_score.php', {
+        method: 'POST',
+        body: data
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log('Success:', data); // Log the server response
+        displayLeaderboard(); // Refresh the leaderboard
+      })
+      .catch((error) => {
+        console.error('Error:', error); // Log any errors
+      });
+    }
+
+    // Function to display the leaderboard
+    function displayLeaderboard() {
+      fetch('get_leaderboard.php')
+      .then(response => response.json())
+      .then(highScores => {
+        const leaderboard = document.getElementById("leaderboard");
+        leaderboard.innerHTML = ""; // Clear previous leaderboard
+
+        for (let i = 0; i < highScores.length && i < 10; i++) { // Show top 10 scores
+          let entry = document.createElement("p");
+          entry.textContent = `${i + 1}. ${highScores[i].playerName}: ${highScores[i].score} days`;
+          leaderboard.appendChild(entry);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error); // Log any errors
+      });
+    }
+
+    updateUI();
+  </script>
+</body>
+</html>
