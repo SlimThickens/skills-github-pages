@@ -1,549 +1,487 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>The Plug</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 5px;
-        font-size: 14px;
-        background-color: #f4f4f4;
-      }
 
-      h1 {
-        margin: 5px 0;
-        font-size: 20px;
-        color: #333;
-      }
+<head>
+  <title>The Plug</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 5px;
+      font-size: 14px;
+      background-color: #f4f4f4;
+    }
 
-      h3 {
-        margin: 5px 0;
-        font-size: 16px;
-        color: #333;
-      }
+    h1 {
+      margin: 5px 0;
+      font-size: 20px;
+      color: #333;
+    }
 
-      p {
-        margin: 3px 0;
-      }
+    h3 {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #333;
+    }
 
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        margin-bottom: 10px;
-        font-size: 12px;
-        background-color: white;
-      }
+    p {
+      margin: 3px 0;
+    }
 
-      table,
-      th,
-      td {
-        border: 1px solid #ddd;
-      }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 10px;
+      font-size: 12px;
+      background-color: white;
+    }
 
-      th,
-      td {
-        text-align: center;
-        padding: 4px 2px;
-      }
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
 
-      th {
-        background-color: #f0f0f5;
-      }
+    th,
+    td {
+      text-align: center;
+      padding: 4px 2px;
+    }
 
-      button {
-        margin: 2px;
-        padding: 3px 6px;
-        font-size: 11px;
-        background-color: #008cba;
-        color: white;
-        border: none;
-      }
+    th {
+      background-color: #f0f0f5;
+    }
 
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1px;
-      }
+    button {
+      margin: 2px;
+      padding: 3px 6px;
+      font-size: 11px;
+      background-color: #008CBA;
+      color: white;
+      border: none;
+    }
 
-      .compact-row {
-        white-space: nowrap;
-      }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1px;
+    }
 
-      #messages {
-        color: red;
-        font-weight: bold;
-        position: fixed;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: white;
-        padding: 5px;
-        border: 1px solid #ddd;
-        z-index: 10;
-        display: none;
-      }
+    .compact-row {
+      white-space: nowrap;
+    }
 
-      #messages img {
-        width: 50px;
-        height: 50px;
-        margin-right: 5px;
-      }
+    #messages {
+      color: red;
+      font-weight: bold;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: white;
+      padding: 5px;
+      border: 1px solid #ddd;
+      z-index: 10;
+      display: none;
+    }
 
-      .price-up {
-        color: green;
-      }
+    #messages img {
+      width: 50px;
+      height: 50px;
+      margin-right: 5px;
+    }
 
-      .price-down {
-        color: red;
-      }
+    .price-up {
+      color: green;
+    }
 
-      #gameOverModal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-      }
+    .price-down {
+      color: red;
+    }
 
-      .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        text-align: center;
-      }
-    </style>
-  </head>
+    #gameOverModal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
 
-  <body>
-    <h1>The Plug</h1>
-    <p>Balance: $<span id="balance">1000</span>|Day: <span id="day">1</span></p>
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      text-align: center;
+    }
+  </style>
+</head>
 
-    <h3>Drugs</h3>
-    <table id="drugTable">
-      <tr>
-        <th>Drug</th>
-        <th>Price</th>
-        <th>Avg</th>
-        <th>Own</th>
-        <th>Actions</th>
-      </tr>
-    </table>
+<body>
+  <h1>The Plug</h1>
+  <p>Balance: $<span id="balance">1000</span>|Day: <span id="day">1</span>
+  </p>
 
-    <h3>Factories</h3>
-    <table id="factoryTable">
-      <tr>
-        <th>Factory</th>
-        <th>Prod/Day</th>
-        <th>Price</th>
-        <th>Own</th>
-        <th>Action</th>
-      </tr>
-    </table>
+  <h3>Drugs</h3>
+  <table id="drugTable">
+    <tr>
+      <th>Drug</th>
+      <th>Price</th>
+      <th>Avg</th>
+      <th>Own</th>
+      <th>Actions</th>
+    </tr>
+  </table>
 
-    <h3>Weapons</h3>
-    <table id="weaponTable">
-      <tr>
-        <th>Weapon</th>
-        <th>Price</th>
-        <th>Own</th>
-        <th>Action</th>
-      </tr>
-    </table>
+  <h3>Factories</h3>
+  <table id="factoryTable">
+    <tr>
+      <th>Factory</th>
+      <th>Prod/Day</th>
+      <th>Price</th>
+      <th>Own</th>
+      <th>Action</th>
+    </tr>
+  </table>
 
-    <p id="messages"></p>
+  <h3>Weapons</h3>
+  <table id="weaponTable">
+    <tr>
+      <th>Weapon</th>
+      <th>Price</th>
+      <th>Own</th>
+      <th>Action</th>
+    </tr>
+  </table>
 
-    <div id="gameOverModal">
-      <div class="modal-content">
-        <h2>Game Over!</h2>
-        <p id="gameOverMessage"></p>
-        <button onclick="restartGame()">Play Again</button>
-      </div>
+  <p id="messages"></p>
+
+  <div id="gameOverModal">
+    <div class="modal-content">
+      <h2>Game Over!</h2>
+      <p id="gameOverMessage"></p>
+      <button onclick="restartGame()">Play Again</button>
     </div>
+  </div>
 
-    <script>
-      let balance = 1000;
-      let day = 1;
-      const VICTORY_AMOUNT = 30000000;
-      const CRIME_BOSS_THRESHOLDS = [10000, 100000, 1000000, 10000000];
-      let currentBossIndex = 0;
-      let gameWon = false;
-      let dayInterval, priceInterval, policeEncounterInterval;
+  <script>
+    let balance = 1000;
+    let day = 1;
+    const VICTORY_AMOUNT = 30000000;
+    const CRIME_BOSS_THRESHOLDS = [10000, 100000, 1000000, 10000000];
+    let currentBossIndex = 0;
+    let gameWon = false;
+    let dayInterval, priceInterval, policeEncounterInterval;
 
-      const drugs = [
-        { name: "Weed", price: 100, owned: 0, averageCost: 0, lastPrice: 100 },
-        {
-          name: "Cocaine",
-          price: 100,
-          owned: 0,
-          averageCost: 0,
-          lastPrice: 100,
-        },
-        { name: "LSD", price: 100, owned: 0, averageCost: 0, lastPrice: 100 },
-        { name: "Meth", price: 100, owned: 0, averageCost: 0, lastPrice: 100 },
-      ];
+    const drugs = [
+      { name: "Weed", price: 100, owned: 0, averageCost: 0, lastPrice: 100 },
+      { name: "Cocaine", price: 100, owned: 0, averageCost: 0, lastPrice: 100 },
+      { name: "LSD", price: 100, owned: 0, averageCost: 0, lastPrice: 100 },
+      { name: "Meth", price: 100, owned: 0, averageCost: 0, lastPrice: 100 },
+    ];
 
-      const factories = [
-        {
-          name: "Grow Room",
-          production: 100,
-          price: 10000,
-          owned: 0,
-          drug: "Weed",
-        },
-        {
-          name: "Coke Lab",
-          production: 100,
-          price: 10000,
-          owned: 0,
-          drug: "Cocaine",
-        },
-        {
-          name: "Acid Lab",
-          production: 100,
-          price: 10000,
-          owned: 0,
-          drug: "LSD",
-        },
-        {
-          name: "Meth Lab",
-          production: 100,
-          price: 10000,
-          owned: 0,
-          drug: "Meth",
-        },
-      ];
+    const factories = [
+      { name: "Grow Room", production: 100, price: 10000, owned: 0, drug: "Weed" },
+      { name: "Coke Lab", production: 100, price: 10000, owned: 0, drug: "Cocaine" },
+      { name: "Acid Lab", production: 100, price: 10000, owned: 0, drug: "LSD" },
+      { name: "Meth Lab", production: 100, price: 10000, owned: 0, drug: "Meth" },
+    ];
 
-      const weapons = [
-        { name: "Brass Knuckles", price: 500, owned: 0 },
-        { name: "Switchblade", price: 1000, owned: 0 },
-        { name: "9mm", price: 2500, owned: 0 },
-        { name: "Shotgun", price: 10000, owned: 0 },
-        { name: "Assault Rifle", price: 50000, owned: 0 },
-        { name: "Rocket Launcher", price: 250000, owned: 0 },
-      ];
+    const weapons = [
+      { name: "Brass Knuckles", price: 500, owned: 0 },
+      { name: "Switchblade", price: 1000, owned: 0 },
+      { name: "9mm", price: 2500, owned: 0 },
+      { name: "Shotgun", price: 10000, owned: 0 },
+      { name: "Assault Rifle", price: 50000, owned: 0 },
+      { name: "Rocket Launcher", price: 250000, owned: 0 },
+    ];
 
-      function showMessage(message, imageSrc = null) {
-        const messageContainer = document.getElementById("messages");
-        messageContainer.innerHTML = imageSrc
-          ? `<img src="${imageSrc}" alt="Image"> ${message}`
-          : message;
-        messageContainer.style.display = "block";
+    function showMessage(message, imageSrc = null) {
+      const messageContainer = document.getElementById("messages");
+      messageContainer.innerHTML = imageSrc ? `<img src="${imageSrc}" alt="Image"> ${message}` : message;
+      messageContainer.style.display = "block";
+    }
+
+    function hideMessage() {
+      const messageContainer = document.getElementById("messages");
+      messageContainer.style.display = "none";
+    }
+
+    function checkCrimeBoss() {
+      if (!gameWon && balance >= VICTORY_AMOUNT) {
+        endGame();
+        return;
       }
 
-      function hideMessage() {
-        const messageContainer = document.getElementById("messages");
-        messageContainer.style.display = "none";
-      }
+      if (!gameWon && currentBossIndex < CRIME_BOSS_THRESHOLDS.length && balance >= CRIME_BOSS_THRESHOLDS[currentBossIndex]) {
+        showMessage("A crime boss approaches! ", "crimeBoss.png");
 
-      function checkCrimeBoss() {
-        if (!gameWon && balance >= VICTORY_AMOUNT) {
-          endGame();
-          return;
-        }
+        const fightButton = document.createElement("button");
+        fightButton.textContent = "Fight";
+        fightButton.onclick = () => handleCrimeBossChoice("fight");
 
-        if (
-          !gameWon &&
-          currentBossIndex < CRIME_BOSS_THRESHOLDS.length &&
-          balance >= CRIME_BOSS_THRESHOLDS[currentBossIndex]
-        ) {
-          showMessage("A crime boss approaches! ", "crimeBoss.png");
-
-          const fightButton = document.createElement("button");
-          fightButton.textContent = "Fight";
-          fightButton.onclick = () => handleCrimeBossChoice("fight");
-
-          const fleeButton = document.createElement("button");
-          fleeButton.textContent = "Flee";
-          fleeButton.onclick = () => handleCrimeBossChoice("flee");
-
-          const messageContainer = document.getElementById("messages");
-          messageContainer.appendChild(fightButton);
-          messageContainer.appendChild(fleeButton);
-        }
-      }
-
-      function handleCrimeBossChoice(action) {
-        hideMessage();
+        const fleeButton = document.createElement("button");
+        fleeButton.textContent = "Flee";
+        fleeButton.onclick = () => handleCrimeBossChoice("flee");
 
         const messageContainer = document.getElementById("messages");
-        messageContainer.innerHTML = "";
+        messageContainer.appendChild(fightButton);
+        messageContainer.appendChild(fleeButton);
+      }
+    }
 
-        if (action === "fight") {
-          const playerPower = weapons.reduce(
-            (sum, w, index) => sum + w.owned * (index + 1) * (index + 1),
-            1
-          );
-          const bossPower = currentBossIndex + 2;
-          if (Math.random() < playerPower / (10 * bossPower)) {
-            const reward = CRIME_BOSS_THRESHOLDS[currentBossIndex] * 2;
-            alert(
-              `You defeated the crime boss! You earned $${reward.toLocaleString()}.`
-            );
-            balance += reward;
-          } else {
-            alert("You lost to the crime boss. You lose 80% of your money.");
-            balance = Math.floor(balance * 0.2);
-          }
+    function handleCrimeBossChoice(action) {
+      hideMessage();
+
+      if (action === "fight") {
+        const playerPower = weapons.reduce((sum, w, index) => sum + w.owned * (index + 1) * (index + 1), 1);
+        const bossPower = currentBossIndex + 2;
+        if (Math.random() < playerPower / (10 * bossPower)) {
+          const reward = CRIME_BOSS_THRESHOLDS[currentBossIndex] * 2;
+          alert(`You defeated the crime boss! You earned $${reward.toLocaleString()}.`);
+          balance += reward;
         } else {
-          alert("You fled from the crime boss and lost 3 days.");
-          day += 3;
+          alert("You lost to the crime boss. You lose 80% of your money.");
+          balance = Math.floor(balance * 0.2);
         }
-        currentBossIndex++;
-        checkCrimeBoss();
-        updateUI();
+      } else {
+        alert("You fled from the crime boss and lost 3 days.");
+        day += 3;
       }
+      currentBossIndex++;
+      checkCrimeBoss();
+      updateUI();
+    }
 
-      function handlePoliceEncounter(action) {
-        hideMessage();
+    function handlePoliceEncounter(action) {
+      hideMessage();
+
+      const playerPower = weapons.reduce((sum, w, index) => sum + w.owned * (index + 1) * (index + 1), 1);
+      const policePower = Math.floor(day / 10) + 1;
+
+      if (action === "fight") {
+        if (Math.random() < playerPower / (5 * policePower)) {
+          alert("You fought off the police!");
+        } else {
+          alert("You were arrested! You lose all your drugs and weapons.");
+          drugs.forEach(drug => drug.owned = 0);
+          weapons.forEach(weapon => weapon.owned = 0);
+        }
+      } else if (action === "bribe") {
+        const bribeAmount = Math.floor(balance * 0.2);
+        if (Math.random() < bribeAmount / (policePower * 10000)) {
+          alert(`You bribed the police with $${bribeAmount.toLocaleString()}.`);
+          balance -= bribeAmount;
+        } else {
+          alert("The police refused your bribe! You lose all your drugs and weapons.");
+          drugs.forEach(drug => drug.owned = 0);
+          weapons.forEach(weapon => weapon.owned = 0);
+        }
+      } else {
+        alert("You fled from the police and lost 1 day.");
+        day += 1;
+      }
+      updateUI();
+    }
+
+    function checkForPoliceEncounter() {
+      if (Math.random() < 0.1) {
+        showMessage("The police are onto you! ", "police.png");
+
+        const fightButton = document.createElement("button");
+        fightButton.textContent = "Fight";
+        fightButton.onclick = () => handlePoliceEncounter("fight");
+
+        const bribeButton = document.createElement("button");
+        bribeButton.textContent = "Bribe";
+        bribeButton.onclick = () => handlePoliceEncounter("bribe");
+
+        const fleeButton = document.createElement("button");
+        fleeButton.textContent = "Flee";
+        fleeButton.onclick = () => handlePoliceEncounter("flee");
 
         const messageContainer = document.getElementById("messages");
-        messageContainer.innerHTML = "";
-
-        const playerPower = weapons.reduce(
-          (sum, w, index) => sum + w.owned * (index + 1) * (index + 1),
-          1
-        );
-        const policePower = Math.floor(day / 10) + 1;
-
-        if (action === "fight") {
-          if (Math.random() < playerPower / (5 * policePower)) {
-            alert("You fought off the police!");
-          } else {
-            alert("You were arrested! You lose all your drugs and weapons.");
-            drugs.forEach((drug) => (drug.owned = 0));
-            weapons.forEach((weapon) => (weapon.owned = 0));
-          }
-        } else if (action === "bribe") {
-          const bribeAmount = Math.floor(balance * 0.2);
-          if (Math.random() < bribeAmount / (policePower * 10000)) {
-            alert(
-              `You bribed the police with $${bribeAmount.toLocaleString()}.`
-            );
-            balance -= bribeAmount;
-          } else {
-            alert(
-              "The police refused your bribe! You lose all your drugs and weapons."
-            );
-            drugs.forEach((drug) => (drug.owned = 0));
-            weapons.forEach((weapon) => (weapon.owned = 0));
-          }
-        } else {
-          alert("You fled from the police and lost 1 day.");
-          day += 1;
-        }
-        updateUI();
+        messageContainer.appendChild(fightButton);
+        messageContainer.appendChild(bribeButton);
+        messageContainer.appendChild(fleeButton);
       }
+    }
 
-      function checkForPoliceEncounter() {
-        if (Math.random() < 0.1) {
-          showMessage("The police are onto you! ", "police.png");
-
-          const fightButton = document.createElement("button");
-          fightButton.textContent = "Fight";
-          fightButton.onclick = () => handlePoliceEncounter("fight");
-
-          const bribeButton = document.createElement("button");
-          bribeButton.textContent = "Bribe";
-          bribeButton.onclick = () => handlePoliceEncounter("bribe");
-
-          const fleeButton = document.createElement("button");
-          fleeButton.textContent = "Flee";
-          fleeButton.onclick = () => handlePoliceEncounter("flee");
-
-          const messageContainer = document.getElementById("messages");
-          messageContainer.appendChild(fightButton);
-          messageContainer.appendChild(bribeButton);
-          messageContainer.appendChild(fleeButton);
-        }
+    function checkGameOver() {
+      const totalDrugsOwned = drugs.reduce((sum, drug) => sum + drug.owned, 0);
+      if (balance < 25 && totalDrugsOwned === 0) {
+        endGame("You're broke! Game over!");
       }
+    }
 
-      function checkGameOver() {
-        const totalDrugsOwned = drugs.reduce(
-          (sum, drug) => sum + drug.owned,
-          0
-        );
-        if (balance < 25 && totalDrugsOwned === 0) {
-          endGame("You're broke! Game over!");
-        }
-      }
+    function endGame(message = null) {
+      gameWon = true;
+      clearInterval(dayInterval);
+      clearInterval(priceInterval);
+      clearInterval(policeEncounterInterval);
 
-      function endGame(message = null) {
-        gameWon = true;
-        clearInterval(dayInterval);
-        clearInterval(priceInterval);
-        clearInterval(policeEncounterInterval);
+      const gameOverModal = document.getElementById("gameOverModal");
+      const gameOverMessage = document.getElementById("gameOverMessage");
+      gameOverMessage.textContent = message || `Congratulations! You have won the game in ${day} days by accumulating $${balance.toLocaleString()}!`;
+      gameOverModal.style.display = "block";
+    }
 
-        const gameOverModal = document.getElementById("gameOverModal");
-        const gameOverMessage = document.getElementById("gameOverMessage");
-        gameOverMessage.textContent =
-          message ||
-          `Congratulations! You have won the game in ${day} days by accumulating $${balance.toLocaleString()}!`;
-        gameOverModal.style.display = "block";
-      }
+    function restartGame() {
+      balance = 1000;
+      day = 1;
+      currentBossIndex = 0;
+      gameWon = false;
 
-      function restartGame() {
-        balance = 1000;
-        day = 1;
-        currentBossIndex = 0;
-        gameWon = false;
-
-        drugs.forEach((drug) => {
-          drug.price = 100;
-          drug.owned = 0;
-          drug.averageCost = 0;
-          drug.lastPrice = 100;
-        });
-
-        factories.forEach((factory) => {
-          factory.owned = 0;
-        });
-
-        weapons.forEach((weapon) => {
-          weapon.owned = 0;
-        });
-
-        document.getElementById("gameOverModal").style.display = "none";
-        document.getElementById("messages").innerHTML = "";
-
-        startGameIntervals();
-        updateUI();
-      }
-
-      function startGameIntervals() {
-        dayInterval = setInterval(() => {
-          day++;
-          factories.forEach((factory) => {
-            const drug = drugs.find((d) => d.name === factory.drug);
-            if (drug) drug.owned += factory.production * factory.owned;
-          });
-          checkCrimeBoss();
-          checkForPoliceEncounter();
-          updateUI();
-        }, 30000);
-
-        priceInterval = setInterval(() => {
-          drugs.forEach((drug) => {
-            drug.lastPrice = drug.price;
-            const changeType = Math.random();
-            let newPrice;
-
-            if (changeType < 0.1) {
-              newPrice = drug.price * (2 + Math.random());
-            } else if (changeType < 0.2) {
-              newPrice = drug.price * (0.2 + Math.random() * 0.3);
-            } else {
-              const changePercent = (Math.random() - 0.5) * 100;
-              newPrice = drug.price * (1 + changePercent / 100);
-            }
-
-            drug.price = Math.max(25, Math.min(200, newPrice));
-          });
-          updateUI();
-        }, 5000);
-      }
-
-      function updateBalance(newBalance) {
-        balance = newBalance;
-        checkCrimeBoss();
-        checkGameOver();
-        updateUI();
-      }
-
-      function sellDrug(index, quantity) {
-        const drug = drugs[index];
-        if (drug.owned >= quantity) {
-          const newBalance = balance + drug.price * quantity;
-          drug.owned -= quantity;
-          updateBalance(newBalance);
-        } else {
-          alert("Not enough stock.");
-        }
-      }
-
-      function sellAll(index) {
-        const drug = drugs[index];
-        const newBalance = balance + drug.price * drug.owned;
+      drugs.forEach(drug => {
+        drug.price = 100;
         drug.owned = 0;
         drug.averageCost = 0;
+        drug.lastPrice = 100;
+      });
+
+      factories.forEach(factory => {
+        factory.owned = 0;
+      });
+
+      weapons.forEach(weapon => {
+        weapon.owned = 0;
+      });
+
+      document.getElementById("gameOverModal").style.display = "none";
+      document.getElementById("messages").innerHTML = "";
+
+      startGameIntervals();
+      updateUI();
+    }
+
+    function startGameIntervals() {
+      dayInterval = setInterval(() => {
+        day++;
+        factories.forEach(factory => {
+          const drug = drugs.find(d => d.name === factory.drug);
+          if (drug) drug.owned += factory.production * factory.owned;
+        });
+        checkCrimeBoss();
+        checkForPoliceEncounter();
+        updateUI();
+      }, 30000);
+
+      priceInterval = setInterval(() => {
+        drugs.forEach(drug => {
+          drug.lastPrice = drug.price;
+          const changeType = Math.random();
+          let newPrice;
+
+          if (changeType < 0.1) {
+            newPrice = drug.price * (2 + Math.random());
+          } else if (changeType < 0.2) {
+            newPrice = drug.price * (0.2 + Math.random() * 0.3);
+          } else {
+            const changePercent = (Math.random() - 0.5) * 100;
+            newPrice = drug.price * (1 + changePercent / 100);
+          }
+
+          drug.price = Math.max(25, Math.min(200, newPrice));
+        });
+        updateUI();
+      }, 5000);
+    }
+
+    function updateBalance(newBalance) {
+      balance = newBalance;
+      checkCrimeBoss();
+      checkGameOver();
+      updateUI();
+    }
+
+    function sellDrug(index, quantity) {
+      const drug = drugs[index];
+      if (drug.owned >= quantity) {
+        const newBalance = balance + (drug.price * quantity);
+        drug.owned -= quantity;
         updateBalance(newBalance);
+      } else {
+        alert("Not enough stock.");
       }
+    }
 
-      function buyDrug(index, quantity) {
-        const drug = drugs[index];
-        const cost = drug.price * quantity;
-        if (balance >= cost) {
-          const newBalance = balance - cost;
-          drug.averageCost =
-            (drug.averageCost * drug.owned + cost) / (drug.owned + quantity);
-          drug.owned += quantity;
-          updateBalance(newBalance);
-        } else {
-          alert("Not enough money.");
-        }
+    function sellAll(index) {
+      const drug = drugs[index];
+      const newBalance = balance + (drug.price * drug.owned);
+      drug.owned = 0;
+      drug.averageCost = 0;
+      updateBalance(newBalance);
+    }
+
+    function buyDrug(index, quantity) {
+      const drug = drugs[index];
+      const cost = drug.price * quantity;
+      if (balance >= cost) {
+        const newBalance = balance - cost;
+        drug.averageCost = (drug.averageCost * drug.owned + cost) / (drug.owned + quantity);
+        drug.owned += quantity;
+        updateBalance(newBalance);
+      } else {
+        alert("Not enough money.");
       }
+    }
 
-      function buyMaxDrug(index) {
-        const drug = drugs[index];
-        let maxAffordable = Math.floor(balance / drug.price);
-        if (maxAffordable > 0) {
-          buyDrug(index, maxAffordable);
-        } else {
-          alert("Not enough money.");
-        }
+    function buyMaxDrug(index) {
+      const drug = drugs[index];
+      let maxAffordable = Math.floor(balance / drug.price);
+      if (maxAffordable > 0) {
+        buyDrug(index, maxAffordable);
+      } else {
+        alert("Not enough money.");
       }
+    }
 
-      function buyFactory(index, quantity = 1) {
-        const factory = factories[index];
-        if (balance >= factory.price * quantity) {
-          const newBalance = balance - factory.price * quantity;
-          factory.owned += quantity;
-          updateBalance(newBalance);
-        } else {
-          alert("Not enough money.");
-        }
+
+    function buyFactory(index, quantity = 1) {
+      const factory = factories[index];
+      if (balance >= factory.price * quantity) {
+        const newBalance = balance - factory.price * quantity;
+        factory.owned += quantity;
+        updateBalance(newBalance);
+      } else {
+        alert("Not enough money.");
       }
+    }
 
-      function buyWeapon(index) {
-        const weapon = weapons[index];
-        if (balance >= weapon.price) {
-          const newBalance = balance - weapon.price;
-          weapon.owned++;
-          updateBalance(newBalance);
-        } else {
-          alert("Not enough money.");
-        }
+    function buyWeapon(index) {
+      const weapon = weapons[index];
+      if (balance >= weapon.price) {
+        const newBalance = balance - weapon.price;
+        weapon.owned++;
+        updateBalance(newBalance);
+      } else {
+        alert("Not enough money.");
       }
+    }
 
-      function updateUI() {
-        document.getElementById("balance").innerText = balance.toLocaleString();
-        document.getElementById("day").innerText = day;
+    function updateUI() {
+      document.getElementById("balance").innerText = balance.toLocaleString();
+      document.getElementById("day").innerText = day;
 
-        const drugTable = document.getElementById("drugTable");
-        drugTable.innerHTML = `<tr>
+      const drugTable = document.getElementById("drugTable");
+      drugTable.innerHTML = `<tr>
                 <th>Drug</th>
                 <th>Price</th>
                 <th>Avg</th>
                 <th>Own</th>
                 <th>Actions</th>
             </tr>`;
-        drugs.forEach((drug, index) => {
-          const row = document.createElement("tr");
-          row.className = "compact-row";
-          const priceClass =
-            drug.price > drug.lastPrice
-              ? "price-up"
-              : drug.price < drug.lastPrice
-              ? "price-down"
-              : "";
-          row.innerHTML = `
+      drugs.forEach((drug, index) => {
+        const row = document.createElement("tr");
+        row.className = 'compact-row';
+        const priceClass = drug.price > drug.lastPrice ? 'price-up' : drug.price < drug.lastPrice ? 'price-down' : '';
+        row.innerHTML = `
                     <td>${drug.name}</td>
                     <td class="${priceClass}">${drug.price.toFixed(0)}</td>
                     <td>${drug.averageCost.toFixed(0)}</td>
@@ -556,24 +494,24 @@
                         <button onclick="sellAll(${index})">Sell All</button>
                     </td>
             `;
-          drugTable.appendChild(row);
-        });
+        drugTable.appendChild(row);
+      });
 
-        const factoryTable = document.getElementById("factoryTable");
-        factoryTable.innerHTML = `<tr>
+      const factoryTable = document.getElementById("factoryTable");
+      factoryTable.innerHTML = `<tr>
                 <th>Factory</th>
                 <th>Prod/Day</th> 
                 <th>Price</th>
                 <th>Own</th>
                 <th>Action</th>
             </tr>`;
-        factories.forEach((factory, index) => {
-          const row = document.createElement("tr");
-          row.className = "compact-row";
+      factories.forEach((factory, index) => {
+        const row = document.createElement("tr");
+        row.className = 'compact-row';
 
-          const productionPerDay = factory.production * factory.owned;
+        const productionPerDay = factory.production * factory.owned;
 
-          row.innerHTML = `
+        row.innerHTML = `
                     <td>${factory.name}</td>
                     <td>${productionPerDay}</td> 
                     <td>${factory.price}</td>
@@ -583,20 +521,20 @@
                         <button onclick="buyFactory(${index}, 10)">Buy 10</button> 
                     </td>
                 `;
-          factoryTable.appendChild(row);
-        });
+        factoryTable.appendChild(row);
+      });
 
-        const weaponTable = document.getElementById("weaponTable");
-        weaponTable.innerHTML = `<tr>
+      const weaponTable = document.getElementById("weaponTable");
+      weaponTable.innerHTML = `<tr>
                 <th>Weapon</th>
                 <th>Price</th>
                 <th>Own</th>
                 <th>Action</th>
             </tr>`;
-        weapons.forEach((weapon, index) => {
-          const row = document.createElement("tr");
-          row.className = "compact-row";
-          row.innerHTML = `
+      weapons.forEach((weapon, index) => {
+        const row = document.createElement("tr");
+        row.className = 'compact-row';
+        row.innerHTML = `
                     <td>${weapon.name}</td>
                     <td>${weapon.price}</td>
                     <td>${weapon.owned}</td>
@@ -604,12 +542,14 @@
                         <button onclick="buyWeapon(${index})">Buy</button>
                     </td>
                 `;
-          weaponTable.appendChild(row);
-        });
-      }
+        weaponTable.appendChild(row);
+      });
+    }
 
-      startGameIntervals();
-      updateUI();
-    </script>
-  </body>
+    startGameIntervals();
+    updateUI();
+
+  </script>
+</body>
+
 </html>
