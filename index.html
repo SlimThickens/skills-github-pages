@@ -117,17 +117,14 @@
             transform: translateY(-5px);
         }
 
-        .card-img-placeholder {
+        /* Image Styling */
+        .card-img {
             width: 100%;
             height: 250px;
-            background-color: #e8e1d5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            object-fit: cover; /* Keeps images proportionate */
             border-radius: 4px;
             margin-bottom: 1rem;
-            color: #8c8273;
-            font-style: italic;
+            background-color: #e8e1d5; /* Acts as a fallback color if the image is slow to load */
         }
 
         .card h3 {
@@ -205,21 +202,21 @@
             
             <div class="grid">
                 <div class="card">
-                    <div class="card-img-placeholder"></div>
+                    <img src="teapot1.jpg" alt="Victorian Rose Bone China Teapot" class="card-img">
                     <h3>Victorian Rose Bone China</h3>
                     <p>A delicate English bone china teapot from the 1920s featuring hand-painted pink roses and gold gilding.</p>
                     <p class="price">$145.00</p>
                 </div>
 
                 <div class="card">
-                    <div class="card-img-placeholder"></div>
+                    <img src="teapot2.jpg" alt="Art Deco Silver Teapot" class="card-img">
                     <h3>Art Deco Silver Plate</h3>
                     <p>A striking geometric teapot from the 1930s. Features an elegant Bakelite handle and a brilliant polished finish.</p>
                     <p class="price">$210.00</p>
                 </div>
 
                 <div class="card">
-                    <div class="card-img-placeholder"></div>
+                    <img src="teapot3.jpg" alt="1950s Brown Betty Teapot" class="card-img">
                     <h3>Classic 1950s Brown Betty</h3>
                     <p>The staple of British tea time. This authentic mid-century Brown Betty brews the perfect, heat-retaining cup of black tea.</p>
                     <p class="price">$65.00</p>
