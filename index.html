@@ -3,178 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tony & The Pup</title>
+    <title>Rhonda's Teapots | Vintage Charm & Elegance</title>
     <style>
-        /* Import some fun, modern fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600&display=swap');
+        /* Color Palette & Base Styles */
+        :root {
+            --primary-bg: #fdfaf6;
+            --header-bg: #4a3f35;
+            --accent-color: #b87366;
+            --text-dark: #332c27;
+            --text-light: #fdfaf6;
+        }
 
-        body {
+        * {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Smooth moving gradient background */
-            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--header-bg);
+            color: var(--text-light);
+            padding: 1.5rem 0;
             text-align: center;
-            overflow: hidden;
+            border-bottom: 5px solid var(--accent-color);
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
         }
 
-        /* Trendy Glassmorphism Effect */
+        nav {
+            margin-top: 1rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: #f2ebd9;
+            border-bottom: 1px solid #e0d5c1;
+        }
+
+        .hero h2 {
+            font-size: 2.2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Featured Collection */
+        .collection-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: var(--header-bg);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
         .card {
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 50px 40px;
-            max-width: 450px;
-            transform: translateY(0);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-            position: relative;
-            z-index: 10;
+            background: #fff;
+            padding: 1.5rem;
+            border: 1px solid #e0d5c1;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px 0 rgba(31, 38, 135, 0.5);
+            transform: translateY(-5px);
         }
 
-        h1 {
-            font-family: 'Fredoka One', cursive;
-            color: #ff4757;
-            font-size: 2.5rem;
-            margin-top: 0;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        .card-img-placeholder {
+            width: 100%;
+            height: 250px;
+            background-color: #e8e1d5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            color: #8c8273;
+            font-style: italic;
         }
 
-        /* Wiggling Dog Animation */
-        .doggo {
-            font-size: 6rem;
-            margin: 10px 0;
-            display: inline-block;
-            animation: wag 2s ease-in-out infinite;
-            filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.2));
-        }
-
-        @keyframes wag {
-            0%, 100% { transform: rotate(-10deg); }
-            50% { transform: rotate(10deg); }
-        }
-
-        p {
-            font-size: 1.3rem;
-            color: #2f3542;
-            line-height: 1.6;
-            font-weight: 600;
-        }
-
-        /* Flashy Button */
-        .money-button {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 15px 40px;
-            font-family: 'Fredoka One', cursive;
+        .card h3 {
             font-size: 1.5rem;
-            color: white;
-            background: linear-gradient(45deg, #2ed573, #7bed9f);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(46, 213, 115, 0.4);
-            transition: all 0.2s ease;
+            margin-bottom: 0.5rem;
+            color: var(--header-bg);
         }
 
-        .money-button:hover {
-            transform: scale(1.1) rotate(-3deg);
-            background: linear-gradient(45deg, #1e90ff, #70a1ff);
-            box-shadow: 0 10px 20px rgba(30, 144, 255, 0.4);
+        .card p {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: #666;
         }
 
-        .money-button:active {
-            transform: scale(0.95);
-        }
-        
-        /* Ambient Floating Cash */
-        .floating-cash {
-            position: absolute;
-            font-size: 2.5rem;
-            animation: floatUp 6s ease-in-out infinite;
-            opacity: 0;
-            z-index: 1;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+        .price {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--accent-color);
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(100px) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+        /* About Section */
+        .about-section {
+            background-color: var(--header-bg);
+            color: var(--text-light);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .about-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: #332c27;
+            color: #ccc;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
         }
     </style>
 </head>
 <body>
 
-    <div class="floating-cash" style="left: 10%; animation-delay: 0s;">💸</div>
-    <div class="floating-cash" style="left: 85%; animation-delay: 1.5s;">💰</div>
-    <div class="floating-cash" style="left: 20%; animation-delay: 3s;">💵</div>
-    <div class="floating-cash" style="left: 75%; animation-delay: 0.5s;">🪙</div>
+    <header>
+        <h1>Rhonda's Teapots</h1>
+        <p>Curated Vintage Finds for the Perfect Pour</p>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#shop">Shop</a>
+            <a href="#about">About Rhonda</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
 
-    <div class="card">
-        <h1>Hi. My name's Tony.</h1>
-        <div class="doggo">🐶</div>
-        <p>See my cute dog? <br> We would sure appreciate it if you gave us some money.</p>
-        <button class="money-button">Thank you! 💸</button>
-    </div>
+    <main>
+        <section id="home" class="hero">
+            <h2>Discover the Charm of Yesteryear</h2>
+            <p>Welcome to Rhonda's Teapots. We specialize in sourcing the finest vintage, antique, and heirloom teapots from around the world. Add a touch of history and elegance to your daily tea ritual.</p>
+        </section>
 
-    <script>
-        document.querySelector('.money-button').addEventListener('click', function() {
-            // Arrays of emojis to rain down
-            let rain = ['💵', '💰', '💸', '🪙', '🦴'];
+        <section id="shop" class="collection-section">
+            <h2 class="section-title">Featured Additions</h2>
             
-            for(let i = 0; i < 35; i++) {
-                let drop = document.createElement('div');
-                drop.innerText = rain[Math.floor(Math.random() * rain.length)];
-                drop.style.position = 'absolute';
-                drop.style.left = Math.random() * 100 + 'vw';
-                drop.style.top = '-50px';
-                drop.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-                drop.style.zIndex = '100';
-                drop.style.transition = 'top 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                
-                // Add a little spin to each drop
-                let rotation = Math.random() * 360;
-                drop.style.transform = `rotate(${rotation}deg)`;
+            <div class="grid">
+                <div class="card">
+                    <div class="card-img-placeholder"></div>
+                    <h3>Victorian Rose Bone China</h3>
+                    <p>A delicate English bone china teapot from the 1920s featuring hand-painted pink roses and gold gilding.</p>
+                    <p class="price">$145.00</p>
+                </div>
 
-                document.body.appendChild(drop);
-                
-                // Trigger the fall
-                setTimeout(() => {
-                    drop.style.top = '120vh';
-                }, 50);
+                <div class="card">
+                    <div class="card-img-placeholder"></div>
+                    <h3>Art Deco Silver Plate</h3>
+                    <p>A striking geometric teapot from the 1930s. Features an elegant Bakelite handle and a brilliant polished finish.</p>
+                    <p class="price">$210.00</p>
+                </div>
 
-                // Clean up the DOM
-                setTimeout(() => {
-                    drop.remove();
-                }, 2000);
-            }
-            
-            // Change button text and color after click
-            this.innerText = "You're awesome! 🐾";
-            this.style.background = "linear-gradient(45deg, #ff4757, #ff6b81)";
-            this.style.boxShadow = "0 10px 20px rgba(255, 71, 87, 0.4)";
-        });
-    </script>
+                <div class="card">
+                    <div class="card-img-placeholder"></div>
+                    <h3>Classic 1950s Brown Betty</h3>
+                    <p>The staple of British tea time. This authentic mid-century Brown Betty brews the perfect, heat-retaining cup of black tea.</p>
+                    <p class="price">$65.00</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <h2>The Story Behind the Spouts</h2>
+            <div class="about-content">
+                <p>Hello, I'm Rhonda! My love affair with vintage teapots began over twenty years ago when I inherited my grandmother's floral Royal Albert set. Since then, I've scoured estate sales, antique markets, and auctions across the globe to rescue and restore these beautiful pieces of history. Whether you are a serious collector or simply looking for a unique centerpiece for your kitchen, I am thrilled to share my collection with you.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <p><strong>Contact Us:</strong> hello@rhondasteapots.com | (555) 123-4567</p>
+        <p>&copy; 2026 Rhonda's Teapots. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
