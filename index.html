@@ -3,239 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhonda's Teapots | Vintage Charm & Elegance</title>
+    <title>Shane & The Hot Dogs</title>
     <style>
-        /* Color Palette & Base Styles */
-        :root {
-            --primary-bg: #fdfaf6;
-            --header-bg: #4a3f35;
-            --accent-color: #b87366;
-            --text-dark: #332c27;
-            --text-light: #fdfaf6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Georgia', serif;
-        }
-
+        /* Base page setup */
         body {
-            background-color: var(--primary-bg);
-            color: var(--text-dark);
-            line-height: 1.6;
+            margin: 0;
+            overflow: hidden; /* Prevents scrollbars from the falling hot dogs */
+            background-color: #1a1a1a; /* Dark background so the hot dogs pop */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
         }
 
-        /* Header & Navigation */
-        header {
-            background-color: var(--header-bg);
-            color: var(--text-light);
-            padding: 1.5rem 0;
-            text-align: center;
-            border-bottom: 5px solid var(--accent-color);
+        /* The shane.mp4 container */
+        .video-container {
+            position: relative;
+            z-index: 10; /* Keeps the video above the static background dogs */
+            border: 8px solid #ffcc00;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 170, 0, 0.4);
+            background: #000;
+            max-width: 80vw;
+            max-height: 80vh;
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-
-        nav {
-            margin-top: 1rem;
-        }
-
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: var(--accent-color);
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            background-color: #f2ebd9;
-            border-bottom: 1px solid #e0d5c1;
-        }
-
-        .hero h2 {
-            font-size: 2.2rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-            font-style: italic;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Featured Collection */
-        .collection-section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            color: var(--header-bg);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: #fff;
-            padding: 1.5rem;
-            border: 1px solid #e0d5c1;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Image Styling */
-        .card-img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover; /* Keeps images proportionate */
+        video {
+            display: block;
+            max-width: 100%;
+            max-height: 80vh;
             border-radius: 4px;
-            margin-bottom: 1rem;
-            background-color: #e8e1d5; /* Acts as a fallback color if the image is slow to load */
         }
 
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--header-bg);
+        /* Hot Dog Base Styles */
+        .hotdog {
+            user-select: none;
+            pointer-events: none; /* Lets you click the video through the hot dogs */
         }
 
-        .card p {
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-            color: #666;
+        /* Static hot dogs (just sitting there) */
+        .static {
+            position: absolute;
+            z-index: 1; /* Behind the video */
         }
 
-        .price {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: var(--accent-color);
+        /* Wrapper for falling down */
+        .raining-wrapper {
+            position: absolute;
+            top: -15vh; /* Start off-screen */
+            z-index: 20; /* Rain OVER the video! */
+            animation: fall linear infinite;
+            pointer-events: none;
         }
 
-        /* About Section */
-        .about-section {
-            background-color: var(--header-bg);
-            color: var(--text-light);
-            padding: 4rem 2rem;
-            text-align: center;
+        /* The spinning animation class */
+        .spinning {
+            animation: spin linear infinite;
+            display: inline-block;
         }
 
-        .about-section h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--accent-color);
+        /* Keyframe Animations */
+        @keyframes fall {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(120vh); } /* Fall past the bottom */
         }
 
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            font-size: 1.1rem;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background-color: #332c27;
-            color: #ccc;
-        }
-
-        footer p {
-            margin-bottom: 0.5rem;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Rhonda's Teapots</h1>
-        <p>Curated Vintage Finds for the Perfect Pour</p>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#shop">Shop</a>
-            <a href="#about">About Rhonda</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+    <div id="hotdog-world"></div>
 
-    <main>
-        <section id="home" class="hero">
-            <h2>Discover the Charm of Yesteryear</h2>
-            <p>Welcome to Rhonda's Teapots. We specialize in sourcing the finest vintage, antique, and heirloom teapots from around the world. Add a touch of history and elegance to your daily tea ritual.</p>
-        </section>
+    <div class="video-container">
+        <video controls autoplay loop>
+            <source src="https://SlimThickens.github.io/skills-github-pages/shane.mp4" type="video/mp4">
+            Your browser does not support the video tag. Have a hot dog instead 🌭.
+        </video>
+    </div>
 
-        <section id="shop" class="collection-section">
-            <h2 class="section-title">Featured Additions</h2>
-            
-            <div class="grid">
-                <div class="card">
-                    <img src="https://raw.githubusercontent.com/SlimThickens/skills-github-pages/main/teapot1.jpg" alt="Victorian Rose Bone China Teapot" class="card-img">
-                    <h3>Victorian Rose Bone China</h3>
-                    <p>A delicate English bone china teapot from the 1920s featuring hand-painted pink roses and gold gilding.</p>
-                    <p class="price">$145.00</p>
-                </div>
+    <script>
+        const container = document.getElementById('hotdog-world');
+        const hotdogEmoji = '🌭';
 
-                <div class="card">
-                    <img src="teapot2.jpg" alt="Art Deco Silver Teapot" class="card-img">
-                    <h3>Art Deco Silver Plate</h3>
-                    <p>A striking geometric teapot from the 1930s. Features an elegant Bakelite handle and a brilliant polished finish.</p>
-                    <p class="price">$210.00</p>
-                </div>
+        // Helper function for randomness
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
 
-                <div class="card">
-                    <img src="teapot3.jpg" alt="1950s Brown Betty Teapot" class="card-img">
-                    <h3>Classic 1950s Brown Betty</h3>
-                    <p>The staple of British tea time. This authentic mid-century Brown Betty brews the perfect, heat-retaining cup of black tea.</p>
-                    <p class="price">$65.00</p>
-                </div>
-            </div>
-        </section>
+        // 1. Scatter the "just sitting there" hot dogs
+        function createStaticHotDogs(count) {
+            for (let i = 0; i < count; i++) {
+                const dog = document.createElement('div');
+                dog.classList.add('hotdog', 'static');
+                dog.innerText = hotdogEmoji;
+                
+                // Random position across the whole screen
+                dog.style.left = random(0, 100) + 'vw';
+                dog.style.top = random(0, 100) + 'vh';
+                
+                // Random size and rotation
+                dog.style.fontSize = random(2, 6) + 'rem';
+                dog.style.transform = `rotate(${random(0, 360)}deg)`;
+                
+                // Randomly flip some horizontally for variety
+                if (Math.random() > 0.5) dog.style.transform += ' scaleX(-1)';
+                
+                container.appendChild(dog);
+            }
+        }
 
-        <section id="about" class="about-section">
-            <h2>The Story Behind the Spouts</h2>
-            <div class="about-content">
-                <p>Hello, I'm Rhonda! My love affair with vintage teapots began over twenty years ago when I inherited my grandmother's floral Royal Albert set. Since then, I've scoured estate sales, antique markets, and auctions across the globe to rescue and restore these beautiful pieces of history. Whether you are a serious collector or simply looking for a unique centerpiece for your kitchen, I am thrilled to share my collection with you.</p>
-            </div>
-        </section>
-    </main>
+        // 2. Unleash the "raining and spinning" hot dogs
+        function createRainingHotDogs(count) {
+            for (let i = 0; i < count; i++) {
+                // The wrapper handles the falling (so it doesn't fight the spinning)
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('raining-wrapper');
+                
+                // Random horizontal start position
+                wrapper.style.left = random(-5, 100) + 'vw';
+                
+                // Random fall speed
+                wrapper.style.animationDuration = `${random(4, 12)}s`;
+                
+                // Stagger the starts so they don't fall in one giant clump
+                wrapper.style.animationDelay = `-${random(0, 20)}s`;
 
-    <footer id="contact">
-        <p><strong>Contact Us:</strong> hello@rhondasteapots.com | (555) 123-4567</p>
-        <p>&copy; 2026 Rhonda's Teapots. All rights reserved.</p>
-    </footer>
+                // The actual hot dog element handles the spinning and sizing
+                const dog = document.createElement('div');
+                dog.classList.add('hotdog');
+                dog.innerText = hotdogEmoji;
+                dog.style.fontSize = random(1.5, 4.5) + 'rem';
 
+                // 80% chance it spins wildly
+                if (Math.random() > 0.2) {
+                    dog.classList.add('spinning');
+                    // Random spin speed and direction
+                    dog.style.animationDuration = `${random(1, 6)}s`;
+                    if (Math.random() > 0.5) {
+                        dog.style.animationDirection = 'reverse';
+                    }
+                }
+
+                wrapper.appendChild(dog);
+                container.appendChild(wrapper);
+            }
+        }
+
+        // --- FIRE UP THE GRILLS ---
+        
+        // Put 60 hot dogs permanently in the background
+        createStaticHotDogs(60); 
+        
+        // Make 100 hot dogs rain and spin continuously
+        createRainingHotDogs(100); 
+
+    </script>
 </body>
 </html>
